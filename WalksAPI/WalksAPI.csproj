@@ -20,4 +20,18 @@
     <Folder Include="Data\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\appsettings.Development.json" />
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\appsettings.json" />
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\bin\Debug\net7.0\appsettings.Development.json" />
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\bin\Debug\net7.0\appsettings.json" />
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\bin\Debug\net7.0\WebApplication2.deps.json" />
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\bin\Debug\net7.0\WebApplication2.runtimeconfig.json" />
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\obj\Debug\net7.0\staticwebassets.build.json" />
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\obj\project.packagespec.json" />
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\obj\WebApplication2.csproj.nuget.dgspec.json" />
+    <_ContentIncludedByDefault Remove="WebApplication2\WebApplication2\Properties\launchSettings.json" />
+  </ItemGroup>
+
 </Project>
