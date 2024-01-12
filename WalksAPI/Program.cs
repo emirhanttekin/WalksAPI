@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WalksAPI.Data;
+using WalksAPI.Mappings;
+using WalksAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TrWalksDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("TrWalksConnectionString")));
-
+builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
