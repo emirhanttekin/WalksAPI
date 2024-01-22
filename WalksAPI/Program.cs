@@ -19,7 +19,16 @@ builder.Services.AddDbContext<TrWalksDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("TrWalksConnectionString")));
 builder.Services.AddDbContext<TrWalksAuthDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("TrWalksAuthConnectionString")));
+
+
+
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
+builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+
+
+
+
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 
@@ -39,7 +48,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
-builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters

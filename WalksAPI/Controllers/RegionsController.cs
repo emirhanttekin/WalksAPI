@@ -35,6 +35,7 @@ namespace WalksAPI.Controllers
         //Get All Regions
         //Get : https://localhost:portnumber/api/regions
         [HttpGet]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll()
         {
             //Get Data From Database - Domain Models 
@@ -47,7 +48,8 @@ namespace WalksAPI.Controllers
         //Get : https://localhost:portnumber/api/regions/{id}
         [HttpGet]
         [Route("{id:Guid}")]
-        public async Task<IActionResult>  GetById([FromRoute] Guid id) {
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult>  GetById([FromRoute] Guid id) {
             //var regions = dbContext.Regions.Find(id);
             //Get Region Domain Model From Database 
             var regionDomain = await regionRepository.GetByIdAsync(id);
@@ -66,7 +68,8 @@ namespace WalksAPI.Controllers
 
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
            
                 //Map or Convert DTO to Domain Model
@@ -89,7 +92,8 @@ namespace WalksAPI.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
+		[Authorize (Roles = "Writer")]
+		public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
           
                 // Map Dto to Domain Model
@@ -117,7 +121,8 @@ namespace WalksAPI.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> Delete([FromRoute] Guid id)
+		[Authorize(Roles = "Writer")]
+		public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
            var regionDomainModel = await regionRepository.DeleteAsync(id);
             if (regionDomainModel == null)

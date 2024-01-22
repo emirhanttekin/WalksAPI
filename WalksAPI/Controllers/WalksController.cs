@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WalksAPI.CustomActionFilters;
 using WalksAPI.Models.Domain;
@@ -9,7 +7,7 @@ using WalksAPI.Repositories;
 
 namespace WalksAPI.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     [ApiController]
     public class WalksController : ControllerBase
     {
