@@ -58,10 +58,10 @@ namespace WalksAPI.Migrations.TrWalksAuthDb
                         },
                         new
                         {
-                            Id = "3d2e64e6-759c-4163-9e98-ee58bfeb0235",
-                            ConcurrencyStamp = "3d2e64e6-759c-4163-9e98-ee58bfeb0235",
-                            Name = "Writer",
-                            NormalizedName = "WRİTER"
+                            Id = "9261d1f8-2302-48f5-9ef4-15571fc74b34",
+                            ConcurrencyStamp = "9261d1f8-2302-48f5-9ef4-15571fc74b34",
+                            Name = "Emir",
+                            NormalizedName = "EMİR"
                         });
                 });
 

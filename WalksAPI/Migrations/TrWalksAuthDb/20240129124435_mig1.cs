@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WalksAPI.Migrations.TrWalksAuthDb
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class mig1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -163,7 +163,7 @@ namespace WalksAPI.Migrations.TrWalksAuthDb
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3d2e64e6-759c-4163-9e98-ee58bfeb0235", "3d2e64e6-759c-4163-9e98-ee58bfeb0235", "Writer", "WRİTER" },
+                    { "9261d1f8-2302-48f5-9ef4-15571fc74b34", "9261d1f8-2302-48f5-9ef4-15571fc74b34", "Emir", "EMİR" },
                     { "a407b6b8-98dd-4ee8-ba2c-ef0b0f7ccf5b", "a407b6b8-98dd-4ee8-ba2c-ef0b0f7ccf5b", "Reader", "READER" }
                 });
 

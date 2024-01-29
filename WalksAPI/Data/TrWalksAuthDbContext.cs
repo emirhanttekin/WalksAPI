@@ -14,7 +14,7 @@ namespace WalksAPI.Data
         {
             base.OnModelCreating(builder);
             var readerRoleId = "a407b6b8-98dd-4ee8-ba2c-ef0b0f7ccf5b";
-            var writerRoleId = "3d2e64e6-759c-4163-9e98-ee58bfeb0235";
+            var emirRoleId = "9261d1f8-2302-48f5-9ef4-15571fc74b34";
             var roles = new List<IdentityRole>
             {
               new IdentityRole
@@ -27,10 +27,10 @@ namespace WalksAPI.Data
 
               new IdentityRole
               {
-                  Id = writerRoleId,
-                  ConcurrencyStamp = writerRoleId,
-                  Name = "Writer",
-                  NormalizedName = "Writer".ToUpper()
+                  Id = emirRoleId,
+                  ConcurrencyStamp = emirRoleId,
+                  Name = "Emir",
+                  NormalizedName = "Emir".ToUpper()
               }
 
             };

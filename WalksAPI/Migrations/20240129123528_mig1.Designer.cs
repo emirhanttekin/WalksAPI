@@ -12,15 +12,15 @@ using WalksAPI.Data;
 namespace WalksAPI.Migrations
 {
     [DbContext(typeof(TrWalksDbContext))]
-    [Migration("20240116064509_Add-migration mig1")]
-    partial class Addmigrationmig1
+    [Migration("20240129123528_mig1")]
+    partial class mig1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
