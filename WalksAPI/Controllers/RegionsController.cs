@@ -1,139 +1,131 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WalksAPI.CustomActionFilters;
-using WalksAPI.Data;
-using WalksAPI.Models.Domain;
 using WalksAPI.Models.Domain.DTO;
+using WalksAPI.Models.Domain;
 using WalksAPI.Repositories;
 
-namespace WalksAPI.Controllers
+namespace NZWalksAPI.Controllers
 {
-
-	// https://localhost:1234/api/regions
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize]
-
-
+	// [Authorize] //If the request not authenticated it'll blocked (Jwt)
 	public class RegionsController : ControllerBase
 	{
-		private readonly TrWalksDbContext dbContext;
-		private readonly IRegionRepository regionRepository;
-		private readonly IMapper mapper;
+		private readonly IRegionRepository _regionRepository;
+		private readonly ILogger<RegionsController> _logger;
+		private readonly IMapper _mapper;
 
-		public RegionsController(TrWalksDbContext dbContext, IRegionRepository regionRepository,
+		public RegionsController(
+			IRegionRepository regionRepository,
+			ILogger<RegionsController> logger,
 			IMapper mapper)
 		{
-			this.dbContext = dbContext;
-			this.regionRepository = regionRepository;
-			this.mapper = mapper;
+			_regionRepository = regionRepository;
+			_logger = logger;
+			_mapper = mapper;
 		}
 
-		//Get All Regions
-		//Get : https://localhost:portnumber/api/regions
+
 		[HttpGet]
-		[Authorize(Roles = "Reader")]
-		public async Task<IActionResult> GetAll()
+		// [Authorize(Roles = "Reader")]
+		public async Task<IActionResult> GetAllAsync()
 		{
+			try
+			{
+				throw new Exception("This is a custom exception ");
+				//Get Data from database - Domain Models
+				var regionsDomain = await _regionRepository.GetAllAsync();
 
-	      //Get Data From Database - Domain Models 
-		  var regionsDomain = await regionRepository.GetAllAsync();
+				_logger.LogInformation($"Finished Regions Action Method request with data: {JsonSerializer.Serialize(regionsDomain)}");
+				//return DTOs  
+				return Ok(_mapper.Map<List<RegionDto>>(regionsDomain));
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, ex.Message);
+				throw;
+			}
 
-			//Reterns DTOs
-			return Ok(mapper.Map<List<Region>>(regionsDomain));
+		
 		}
-		//GET SINGLE REGION  (Get Region By Id)
-		//Get : https://localhost:portnumber/api/regions/{id}
+
 		[HttpGet]
-		[Route("{id:Guid}")]
-		[Authorize(Roles = "Emir")]
-		public async Task<IActionResult> GetById([FromRoute] Guid id)
+		[Route("{Id:Guid}")]
+		// [Authorize(Roles = "Reader")]
+		public async Task<IActionResult> GetById([FromRoute] Guid Id)
 		{
-			//var regions = dbContext.Regions.Find(id);
-			//Get Region Domain Model From Database 
-			var regionDomain = await regionRepository.GetByIdAsync(id);
+			// var region = _context.Regions.Find(Id); //just works with ID field. It is useless for other fields.!!
+
+			//Get Region Domain Model From DB
+			var regionDomain = await _regionRepository.GetByIdAsync(Id);
 
 			if (regionDomain == null)
 			{
 				return NotFound();
 			}
 
-			//Return DTO back to client 
-			return Ok(mapper.Map<RegionDto>(regionDomain));
-
+			//Return DTO back to client
+			return Ok(_mapper.Map<RegionDto>(regionDomain));
 		}
-		//Post to create new region 
-		// POST : https://localhost:portnumber/api/regions/
 
 		[HttpPost]
 		[ValidateModel]
-		[Authorize(Roles = "Emir")]
-		public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
+	    [Authorize(Roles = "Emir")]
+		public async Task<IActionResult> Create([FromBody] AddRegionRequestDto createRegionRequestDto)
 		{
+			//If model state is not valid it sends bad request error
 
-			//Map or Convert DTO to Domain Model
-			var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
+			//Map DTO to Domain Model
+			var regionDomainModel = _mapper.Map<Region>(createRegionRequestDto);
 
-			//Use Domain Model to create Region
-			regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
-			//MAP Domain model back to DTO
-			var regionDto = mapper.Map<RegionDto>(regionDomainModel);
+			//Use Domain Model to Create Region
+			regionDomainModel = await _regionRepository.CreateAsync(regionDomainModel);
 
-			return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
+			//It turns to information about newly saved item. And show it in the swagger.
+			//Map Domain Model Back to DTO
+			var regionDto = _mapper.Map<RegionDto>(regionDomainModel);
 
-
+			return CreatedAtAction(nameof(GetById), new { Id = regionDto.Id }, regionDto);
 		}
-
-
-		//Update Region 
-		//PUT: https://localhost:portnumber/api/regions/{id}
 
 		[HttpPut]
-		[Route("{id:Guid}")]
+		[Route("{Id:Guid}")] //only Guid type are passed. ( ' : '  for filtering)
 		[ValidateModel]
-		[Authorize(Roles = "Emir")]
-		public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
+	    [Authorize(Roles = "Emir")]
+		public async Task<IActionResult> Update([FromRoute] Guid Id,
+			[FromBody] UpdateRegionRequestDto updateRegionRequestDto)
 		{
+			//Map DTO to Domain Model
+			var regionDomainModel = _mapper.Map<Region>(updateRegionRequestDto);
 
-			// Map Dto to Domain Model
-			var regionDomainModel = mapper.Map<Region>(updateRegionRequestDto);
-			regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
+			//Check if region exists
 			if (regionDomainModel == null)
-			{
 				return NotFound();
 
-			}
+			await _regionRepository.UpdateAsync(Id, regionDomainModel);
 
 
-			await dbContext.SaveChangesAsync();
-			//Convert Domain Model to Dto
-			var regionDto = mapper.Map<RegionDto>(regionDomainModel);
+			//We never back Domain models. We always back DTOs to client
+			//Map Domain Model Back To DTO
 
-			return Ok(regionDto);
-
-
-
+			//Return to Swagger to show it
+			return Ok(_mapper.Map<RegionDto>(regionDomainModel));
 		}
 
-		//Delete Region 
-		//DELETE : https://localhost:portnumber/api/regions/{id}
-
 		[HttpDelete]
-		[Route("{id:Guid}")]
-		[Authorize(Roles = "Emir , Reader")]
-		public async Task<IActionResult> Delete([FromRoute] Guid id)
+		[Route("{Id:Guid}")]
+		 [Authorize(Roles = "Emir")]
+		public async Task<IActionResult> DeleteById([FromRoute] Guid Id)
 		{
-			var regionDomainModel = await regionRepository.DeleteAsync(id);
+			var regionDomainModel = await _regionRepository.DeleteAsync(Id);
+
 			if (regionDomainModel == null)
-			{
 				return NotFound();
-			}
 
-
-			return Ok(mapper.Map<RegionDto>(regionDomainModel));
+			return Ok(_mapper.Map<RegionDto>(regionDomainModel));
 		}
 	}
 }
