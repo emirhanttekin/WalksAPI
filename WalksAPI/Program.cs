@@ -70,7 +70,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 // Adding User Roles provider information
 builder.Services.AddIdentityCore<IdentityUser>()
-	.AddRoles<IdentityRole>()
+	.AddRoles <IdentityRole>()
 	.AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("NZWalks")
 	.AddEntityFrameworkStores<TrWalksAuthDbContext>()
 	.AddDefaultTokenProviders();

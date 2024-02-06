@@ -35,14 +35,13 @@ namespace NZWalksAPI.Controllers
 		{
 			try
 			{
-				throw new Exception("This is a custom exception ");
+				
 				//Get Data from database - Domain Models
 				var regionsDomain = await _regionRepository.GetAllAsync();
 
-				_logger.LogInformation($"Finished Regions Action Method request with data: {JsonSerializer.Serialize(regionsDomain)}");
-				//return DTOs  
-				return Ok(_mapper.Map<List<RegionDto>>(regionsDomain));
-			}
+                _logger.LogInformation($"Finished GetAllRegions request with data {JsonSerializer.Serialize(regionsDomain)}");
+                return Ok(_mapper.Map<IEnumerable<RegionDto>>(regionsDomain));
+            }
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, ex.Message);
@@ -73,7 +72,7 @@ namespace NZWalksAPI.Controllers
 
 		[HttpPost]
 		[ValidateModel]
-	    [Authorize(Roles = "Emir")]
+	    //[Authorize(Roles = "Emir")]
 		public async Task<IActionResult> Create([FromBody] AddRegionRequestDto createRegionRequestDto)
 		{
 			//If model state is not valid it sends bad request error
@@ -94,7 +93,7 @@ namespace NZWalksAPI.Controllers
 		[HttpPut]
 		[Route("{Id:Guid}")] //only Guid type are passed. ( ' : '  for filtering)
 		[ValidateModel]
-	    [Authorize(Roles = "Emir")]
+	    //[Authorize(Roles = "Emir")]
 		public async Task<IActionResult> Update([FromRoute] Guid Id,
 			[FromBody] UpdateRegionRequestDto updateRegionRequestDto)
 		{
@@ -117,7 +116,7 @@ namespace NZWalksAPI.Controllers
 
 		[HttpDelete]
 		[Route("{Id:Guid}")]
-		 [Authorize(Roles = "Emir")]
+		 //[Authorize(Roles = "Emir")]
 		public async Task<IActionResult> DeleteById([FromRoute] Guid Id)
 		{
 			var regionDomainModel = await _regionRepository.DeleteAsync(Id);
